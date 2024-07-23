@@ -20,6 +20,30 @@ A solution set is:
   [7],
   [2,2,3]
 ]
+
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector<vector<int>> res;
+        vector<int> arr;
+        findSum(res, arr, candidates, target, 0);
+        return res;
+    }
+    void findSum(vector<vector<int>> &res, vector<int> &arr, vector<int> &candidate,int target, int begin){
+        if(!target){
+            res.push_back(arr);
+            return;
+        }
+        for(int i=begin; i!=candidate.size() && target>=candidate[i];i++){
+            arr.push_back(candidate[i]);
+            findSum(res, arr, candidate, target - candidate[i], i);
+            arr.pop_back();
+        }
+    }
+};
+
 Example 2:
 
 Input: candidates = [2,3,5], target = 8,
