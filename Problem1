@@ -1,0 +1,35 @@
+Time complexity:O(2^t)
+space complexity:O(t)
+
+class Solution 
+{
+    List<List<Integer>> result;
+    List<Integer> path;
+    public List<List<Integer>> combinationSum(int[] candidates, int target) 
+    {
+        this.result = new ArrayList<>();
+        this.path = new ArrayList<>();
+        helper(candidates,0,target);
+        return result;
+    }
+    private void helper(int [] candidates, int pivot, int target)
+    {
+        if(target == 0)
+        {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        if(target < 0)
+        {
+            return;
+        }
+        for(int i=pivot; i<candidates.length;i++)
+        {
+            path.add(candidates[i]);
+            helper(candidates,i,target-candidates[i]);
+            path.remove(path.size()-1);
+        }
+    }
+}
+
+
