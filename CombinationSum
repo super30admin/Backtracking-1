@@ -1,0 +1,48 @@
+01 Approach: T.c --> O()
+
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+       recurse(candidates,0,target,new ArrayList<>());
+       return result; 
+    }
+    private void recurse(int[] candidates,int index,int curr,List<Integer> path){
+        if(curr < 0 || index == candidates.length){
+           return;
+        }
+        if(curr == 0){            
+           result.add(path);
+           return;
+        }       
+        List<Integer> newList = new ArrayList<>(path);
+        newList.add(candidates[index]);
+        //choose
+       recurse(candidates,index,curr-candidates[index],newList);
+       //No choose
+       recurse(candidates,index+1,curr,new ArrayList<>(path));
+    }
+}
+
+*****************************************************************************************
+class Solution {
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+       recurse(candidates,0,target,new ArrayList<>());
+       return result; 
+    }
+    private void recurse(int[] candidates,int index,int curr,List<Integer> path){
+        if(curr < 0 || index == candidates.length){
+           return;
+        }
+        if(curr == 0){            
+           result.add(new ArrayList<>(path));
+           return;
+        }       
+
+        path.add(candidates[index]);
+        //choose
+       recurse(candidates,index,curr-candidates[index],path);
+       path.remove(path.size()-1);
+       recurse(candidates,index+1,curr,path);
+    }
+}

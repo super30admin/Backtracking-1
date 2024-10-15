@@ -1,0 +1,47 @@
+T.c --> exponential
+S.c --> O(n)
+
+class Solution {
+    List<String> result = new ArrayList<>();
+
+    public List<String> addOperators(String num, int target) {
+        backtrack(num, target, 0, new StringBuilder(), 0, 0);
+        return result;
+    }
+    public void backtrack(String num , int target,int index, StringBuilder sb,long calc,long tail ){
+        if(index == num.length()){
+           if(calc == target){
+            result.add(sb.toString());
+            return;
+           }
+        }
+        
+        for(int i =index; i<num.length(); i++){
+            if(index != i && num.charAt(index) == '0')break;
+            long curr = Long.parseLong(num.substring(index,i+1));
+            int len = sb.toString().length();
+            if(index == 0){
+                sb.append(curr);
+                backtrack(num, target,i+1, sb,curr,curr);
+                sb.setLength(len);
+            }else{
+                //+
+                sb.append("+");
+                sb.append(curr);
+                backtrack(num, target,i+1, sb,curr+calc,curr);
+                sb.setLength(len);
+                //-
+                sb.append("-");
+                sb.append(curr);
+                backtrack(num, target,i+1, sb,calc-curr,-curr);
+                sb.setLength(len);
+                //*
+                sb.append("*");
+                sb.append(curr);
+                backtrack(num, target,i+1, sb,calc-tail+tail*curr,tail*curr);
+                sb.setLength(len);
+                ///
+            }
+        }
+    }
+}
