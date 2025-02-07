@@ -1,0 +1,51 @@
+# Time Complexity : exponential
+# Space Complexity : O(n), because we are creating a new list and copying elements only when target == 0, else using 1 list only at every recursive call
+# Did this code successfully run on Leetcode : Yes
+# Any problem you faced while coding this : NA 
+
+# Your code here along with comments explaining your approach:
+# using backtracking approach because in this solution we will not have to use a new list at every recursive call
+# 0 - 1 based recusion, along with backtracking technique but a recusrion inside the for loop
+# we start a loop to iterate over all indices of i
+# we recurse on the same element with increasing the index, until index reaches the end of the list or the target becomes negative
+# since recusion in inside the for loop, we need to reach the base condition for all recusrive loops inside 1 iteration of i
+
+class Solution(object):
+    def __init__(self):
+        self.result = [] # result list to store all possible combinations
+    
+    def combinationSum(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        # if we use recusrion we will have to create a new list at every recursive call
+        # if we use backtracking, we ceate a new list only at the base condition
+        
+        # using backtracking and *for loop based recusrion*
+        if len(candidates) == 0:
+            return [-1,-1]
+        
+        self.forloopbacktrack(candidates, target, 0, [])
+        return self.result
+    
+    def forloopbacktrack(self, candidates, target, index, path):
+        # base conditions
+        if target < 0:
+            return
+        
+        if target == 0:
+            newlist = path[:]
+            self.result.append(newlist)
+            return
+
+        # logic
+        # for loop - i traversing every index in candidates
+        for i in range(index, len(candidates)):
+            # action - addition
+            path.append(candidates[i])
+            # recurse
+            self.forloopbacktrack(candidates, target - candidates[i], i, path)
+            # undoing the action - backtracking
+            path.pop()
