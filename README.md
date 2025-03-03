@@ -30,6 +30,57 @@ A solution set is:
   [3,5]
 ]
 
+## solution
+class Solution {
+
+    List<List<Integer>> result;
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+
+        result = new ArrayList<>();
+
+        if(candidates == null ) return result;
+
+        
+
+        helper(candidates ,0,target,new ArrayList<>());
+
+            return result;
+
+    }
+
+    private void helper(int[] candidates , int pivot ,int amount,List<Integer> path){
+
+        //base
+
+        if(amount ==0){
+
+            result.add(new ArrayList<>(path));
+
+            return;
+
+        }
+
+        if(amount<0) return;
+
+    
+        //logic
+
+         for(int i=pivot ;i<candidates.length;i++){
+
+             path.add(candidates[i]);
+
+             helper(candidates, i,amount -candidates[i] ,path);
+
+             path.remove(path.size()-1);
+
+         } 
+
+    }
+
+}
+
+
 ## Problem2
 Expression Add Operators(https://leetcode.com/problems/expression-add-operators/)
 
@@ -56,3 +107,50 @@ Example 5:
 Input: num = "3456237490", target = 9191
 Output: []
 
+## solution
+class Solution {
+    public List<String> addOperators(String num, int target) {
+        List<String> result = new ArrayList<>();
+        if (num == null || num.length() == 0) {
+            return result;
+        }
+        backtrack(num, target, 0, 0, 0, "", result);
+        return result;
+    }
+
+    private void backtrack(String num, int target, int index, long currentValue, long lastOperand, String expression, List<String> result) {
+        // Base case: If we've reached the end of the string
+        if (index == num.length()) {
+            if (currentValue == target) {
+                result.add(expression);
+            }
+            return;
+        }
+
+        // Iterate through all possible positions of the next operand
+        for (int i = index + 1; i <= num.length(); i++) {
+            String currentNumStr = num.substring(index, i);
+
+            // Skip numbers with leading zeros, e.g., "05" or "001"
+            if (currentNumStr.length() > 1 && currentNumStr.charAt(0) == '0') {
+                continue;
+            }
+
+            long currentNum = Long.parseLong(currentNumStr);
+
+            // If we're at the start, we can't add any operator, just take the current number
+            if (index == 0) {
+                backtrack(num, target, i, currentNum, currentNum, currentNumStr, result);
+            } else {
+                // Add '+'
+                backtrack(num, target, i, currentValue + currentNum, currentNum, expression + "+" + currentNumStr, result);
+
+                // Add '-'
+                backtrack(num, target, i, currentValue - currentNum, -currentNum, expression + "-" + currentNumStr, result);
+
+                // Add '*'
+                backtrack(num, target, i, currentValue - lastOperand + lastOperand * currentNum, lastOperand * currentNum, expression + "*" + currentNumStr, result);
+            }
+        }
+    }
+}
