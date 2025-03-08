@@ -1,0 +1,87 @@
+// Time Complexity :O(4^L) where L is the length of the string and for each element we have explore 4 possible cases +,-,*, and no choose
+// Space Complexity :O(1)
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+
+
+// Your code here along with comments explaining your approach:Here i have used for loop recusrion because we have to explore all possible combinations to avoid operator precedence issue i have maintained tail here for multipication i just remove the taile from calculated value and multiply the tail with curr.as well to avoid 0 precedence i added a condition if 0 exist with other element it means 05 no value so thet i put break overthere.
+
+class Solution {
+    List<String> result = new ArrayList<>();
+
+    public List<String> addOperators(String num, int target) {
+        int n = num.length();
+        helper(num, 0, "", 0, 0, result, target);
+        return result;
+    }
+
+    private void helper(String num, int pivot, String path, long cal, long tail, List<String> result, int target) {
+        if (pivot == num.length()) {
+            if (cal == target) {
+                result.add(path);
+            }
+        }
+        for (int i = pivot; i < num.length(); i++) {
+            long curr = Long.parseLong(num.substring(pivot, i+1));
+            if(pivot != i && num.charAt(pivot) == '0')break;
+            if (pivot == 0) {
+                helper(num, i + 1, path + curr, curr, curr, result, target);
+            } else {
+                helper(num, i + 1, path + "+" + curr, cal + curr, curr, result, target);
+                helper(num, i + 1, path + "-" + curr, cal - curr, -curr, result, target);
+                helper(num, i + 1, path + "*" + curr, cal - tail + tail * curr, tail * curr, result, target);
+            }
+        }
+    }
+}
+
+
+
+// Time Complexity :O(L*4^L) where L is the length of the string and for each element we have explore 4 possible cases +,-,*, and no choose
+// Space Complexity :O(1)
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+
+// Your code here along with comments explaining your approach:same approach as above but here i have used backtracking to get the previous state.that is what is timecomplexity would be L*4^L
+
+class Solution {
+    List<String> result = new ArrayList<>();
+
+    public List<String> addOperators(String num, int target) {
+        int n = num.length();
+        helper(num, 0, new StringBuilder(), 0, 0, result, target);
+        return result;
+    }
+
+    private void helper(String num, int pivot, StringBuilder st, long cal, long tail, List<String> result, int target) {
+        if (pivot == num.length()) {
+            if (cal == target) {
+                result.add(st.toString());
+            }
+        }
+        for (int i = pivot; i < num.length(); i++) {
+            long curr = Long.parseLong(num.substring(pivot, i + 1));
+            int le = st.length();
+            if (pivot != i && num.charAt(pivot) == '0')
+                break;
+            if (pivot == 0) {
+                st.append(curr);
+                helper(num, i + 1, st, curr, curr, result, target);
+                st.setLength(le);
+            } else {
+                st.append("+");
+                st.append(curr);
+                helper(num, i + 1, st, cal + curr, curr, result, target);
+                st.setLength(le);
+                st.append("-");
+                st.append(curr);
+                helper(num, i + 1, st, cal - curr, -curr, result, target);
+                st.setLength(le);
+                st.append("*");
+                st.append(curr);
+                helper(num, i + 1, st, cal - tail + tail * curr, tail * curr, result, target);
+                st.setLength(le);
+            }
+        }
+    }
+}

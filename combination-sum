@@ -1,0 +1,73 @@
+// Time Complexity : O(2^(n*(m+n) ))
+// Space Complexity : O((m+n)*2^(m+n))
+// Did this code successfully run on Leetcode :yes
+// Three line explanation of solution in plain english:
+
+
+// Your code here along with comments explaining your approach
+class Solution {
+     List<List<Integer>> result=new ArrayList<>();
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        int n=candidates.length;
+         List<Integer> path=new ArrayList<>();
+        helper(candidates,0,path,target);
+        return result;
+    }
+     public void helper(int[] candidates,int index,List<Integer> path,int target){ //m+n 2^m+n
+            if(index == candidates.length)return;
+            if(target < 0) return ;
+           //action
+            if(target == 0){
+           result.add(path);
+           return;
+            }
+            List<Integer> li=new ArrayList<>(path); //here creating deep copy for each element because it call by reference
+            li.add(candidates[index]);
+            //recurse
+            //choose case
+            helper(candidates,index,li,target-candidates[index]); //and passing new deep copied li only for choose case 
+            //backtrack
+            
+            //not choose case
+            helper(candidates,index+1,path,target); //here we donot need to pass deep copied one because we are not adding any vlaues to path while not choosing
+           
+            
+        }
+}
+
+
+
+
+// Time Complexity : O(2^m+n ) here if we create deepcopy for every node then the time and space complexity would be O(m+n * 2^(m+n) )
+// Space Complexity : O(2^(m+n))
+// Did this code successfully run on Leetcode :yes
+// Three line explanation of solution in plain english: this for loop recursive approach where i have pivot and i.i start pivot from zero where i encouter target -ve then returns to recursion as well if the target becomes zero then adding path to result.
+
+
+// Your code here along with comments explaining your approach
+
+class Solution {
+    List<List<Integer>> result=new ArrayList<>();
+   public List<List<Integer>> combinationSum(int[] candidates, int target) {
+       int n=candidates.length;
+       List<Integer> path=new ArrayList<>();
+       helper(candidates,0,path,target);
+       return result;
+   }
+   public void   helper(int[]  candidates,int pivot,List<Integer> path,int target){ O(2^m+n)
+       if(target < 0 ){
+           return;
+       }
+       if(target == 0){
+           result.add(new ArrayList<>(path)); // creating deep copy only while adding path to result so one time for each path
+           return;
+       }
+       for(int i=pivot;i<candidates.length;i++){
+               path.add(candidates[i]);
+           helper(candidates,i,path,target-candidates[i]);
+           path.remove(path.size()-1); //backtracing the action
+       }
+   }
+ 
+       
+}
