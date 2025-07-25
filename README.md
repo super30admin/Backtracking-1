@@ -29,6 +29,52 @@ A solution set is:
   [2,3,3],
   [3,5]
 ]
+TC: O(2^N)
+SC: O(N)
+
+//Approach:-
+1. I wrote a backtracking function where either I will pick the element or not pick the element
+2. If the target becomes 0 I will add the list in my result list
+3. If we reached the end of the list we will simply return
+
+class Solution {
+
+    List<List<Integer>> result;
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        if(candidates == null || candidates.length == 0){
+            return new ArrayList<>();
+        }
+
+        result = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+
+        backtrack(candidates, target, 0, list);
+
+        return result;
+    }
+
+    private void backtrack(int[] candidates, int target, int ind, ArrayList<Integer> list){
+        //base case
+        if(ind == candidates.length || target < 0){
+            return;
+        }
+
+        //when we found the combination
+        if(target == 0){
+            result.add(new ArrayList<>(list));
+            return;
+        }
+
+        //case 1: Pick the current element
+        list.add(candidates[ind]);
+        backtrack(candidates, target - candidates[ind], ind, list);
+
+        //case 2: Do not pick the current element
+        list.remove(list.size()-1);
+        backtrack(candidates, target, ind+1, list);
+    }
+}
 
 ## Problem2
 Expression Add Operators(https://leetcode.com/problems/expression-add-operators/)
@@ -56,3 +102,64 @@ Example 5:
 Input: num = "3456237490", target = 9191
 Output: []
 
+TC : O(3^N * N)
+SC : O(3^N * N)
+
+//Approach:-
+
+1. I wrote a bactracking solution in which I will backtrack for 3 possibilties: +,-,*
+2. We will simply add or subtract to the sum but in case of multiplication as precedence of the operators matter we will first multiply the current number to the last number and the subtract the last number from the sum and add the product
+
+import java.util.*;
+
+class Solution {
+    List<String> result;
+
+    public List<String> addOperators(String num, int target) {
+        result = new ArrayList<>();
+        if (num == null || num.length() == 0) return result;
+        backtrack(num, target, 0, 0, 0, new StringBuilder());
+        return result;
+    }
+
+    private void backtrack(String num, int target, int index, long sum, long tail, StringBuilder str) {
+        // Base case: all digits are used
+        if (index == num.length()) {
+            if (sum == target) {
+                result.add(str.toString());
+            }
+            return;
+        }
+
+        for (int i = index; i < num.length(); i++) {
+            // Skip numbers with leading zeros
+            if (num.charAt(index) == '0' && i != index) break;
+
+            long curr = Long.parseLong(num.substring(index, i + 1));
+            int len = str.length();
+
+            if (index == 0) {
+                // First number, no operator
+                str.append(curr);
+                backtrack(num, target, i + 1, curr, curr, str);
+                str.setLength(len); // backtrack
+            }
+            else {
+                // +
+                str.append('+').append(curr);
+                backtrack(num, target, i + 1, sum + curr, curr, str);
+                str.setLength(len);
+
+                // -
+                str.append('-').append(curr);
+                backtrack(num, target, i + 1, sum - curr, -curr, str);
+                str.setLength(len);
+
+                // *
+                str.append('*').append(curr);
+                backtrack(num, target, i + 1, sum - tail + (tail * curr), tail * curr, str);
+                str.setLength(len);
+            }
+        }
+    }
+}
