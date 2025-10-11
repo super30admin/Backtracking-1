@@ -1,0 +1,60 @@
+// Time Complexity: O(4^n)
+// Space Complexity: O(n)
+
+// Use recursion to create all possible ways to insert '+', '-', '*' in between numbers
+// Keep track of the current calculated value and last used number for backtracking
+// As '*' has more precedence backtrack the last used number and calculate again
+// Add the expression to result list when the expression calculates to the traget value
+ 
+class Solution {
+    List<String> result;
+
+    public List<String> addOperators(String num, int target) {
+        this.result = new ArrayList<>();
+        helper(num, 0, 0l, 0l, new StringBuilder(), target);
+        return result;
+    }
+
+    private void helper(String num, int index, Long calc, Long tail, StringBuilder path, int target) {
+        if(index == num.length()) {
+            // calculates value becomes equal to target
+            if(calc == target) {
+                result.add(path.toString());
+            }
+        }
+
+        for (int i = index; i < num.length(); i++) {
+            // if number has prefix 0 skip it
+            if(num.charAt(index) == '0' && i != index)
+                break;
+
+            String s = num.substring(index, i + 1);
+            long curr = Long.parseLong(s);
+            int length = path.length();
+            
+            // if it is the first number only add the number not any operators 
+            if (index == 0) {
+                path.append(curr);
+                helper(num, i + 1, curr, curr, path, target);
+                path.setLength(length);
+            } 
+            else {
+                // + operator
+                path.append("+").append(curr);
+                helper(num, i + 1, calc + curr, curr, path, target);
+                path.setLength(length);
+                
+                // - operator
+                path.append("-").append(curr);
+                helper(num, i + 1, calc - curr, -curr, path, target);
+                path.setLength(length);
+                
+                // * operator
+                path.append("*").append(curr);
+                helper(num, i + 1, calc - tail + (tail * curr), tail * curr, path, target);
+                path.setLength(length);
+            }
+        }
+
+    }
+}
