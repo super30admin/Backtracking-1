@@ -1,0 +1,33 @@
+// Time Complexity: O(2^(m+n))
+// Space Complexity: O(n)
+
+// Generate all possible combinations that start with the index
+// Combinations are generated in a choose and not choose manner
+// If chosen recursively call the function after reducing target value and add number to list
+// If target becomes = 0 add to result list
+
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        helper(candidates, target, 0, result, new ArrayList<>());
+        return result;
+    }
+
+    private void helper(int[] candidates, int target, int index, List<List<Integer>> result, List<Integer> list) {
+        if(target == 0) {
+            result.add(new ArrayList<>(list));
+            return;
+        }
+
+        if(target < 0)
+            return;
+
+        for(int i = index; i < candidates.length; i++) {
+            if(candidates[i] <= target) {
+                list.add(candidates[i]);
+                helper(candidates, target - candidates[i], i, result, list);
+                list.remove(list.size()-1);
+            }
+        }
+    }
+}
