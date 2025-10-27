@@ -1,0 +1,37 @@
+
+//We try all combinations starting from a pivot index.
+// The loop represents both choices: picking i handles the choose case, and moving i forward handles the no-choose.
+// After choosing a number, we recurse with a reduced target and backtrack to explore other options.
+
+// time o(2^m+n)
+// space o(n)
+
+
+class Solution {
+    List<List<Integer>> result;
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        this.result = new ArrayList<>();
+        helper(candidates, target, 0, new ArrayList<>());
+        return result;
+    }
+
+    private void helper(int[] candidates, int target, int pivot, List<Integer> path) {
+
+        //base case
+        if (target < 0 || pivot == candidates.length) return;
+
+        if (target == 0) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+
+        for (int i = pivot; i < candidates.length; i++) {
+            //action
+            path.add(candidates[i]);
+            //recurse
+            helper(candidates, target - candidates[i], i, path);
+            //backtrack
+            path.remove(path.size() - 1);
+        }
+    }
+}
