@@ -1,6 +1,6 @@
 # https://leetcode.com/problems/combination-sum/
 
-# Time Complexity- O(n*2^(m+n)) Self Complexity- O(n2)
+#Time Complexity- O(n*2^(m+n)) Self Complexity- O(n2)
 
 class Solution:
     def combinationSum(self, candidates, target):
